@@ -4,9 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: true,
-  });
+  const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -15,6 +13,12 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.enableCors({
+    origin: `${process.env.NEXT_PUBLIC_APP_URL}`,
+    methods: ['POST', 'PUT', 'DELETE', 'GET', 'PATCH'],
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Billing Information')
