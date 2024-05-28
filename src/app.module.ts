@@ -4,26 +4,19 @@ import { AppService } from './app.service';
 import { BillingModule } from './billing/billing.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
+// import { join } from 'path';
+import typeorm from './config/typeorm';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [typeorm],
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        ssl: {
-          rejectUnauthorized: configService.get('DB_SSL'),
-        },
-        entities: [join(process.cwd(), 'dist/**/*.entity.js')],
-      }),
+      useFactory: async (configService: ConfigService) =>
+        configService.get('typeorm'),
     }),
     BillingModule,
   ],
