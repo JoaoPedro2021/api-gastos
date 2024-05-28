@@ -4,14 +4,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  app.enableCors({
-    origin: 'https://api-gastos-one.vercel.app/', // configurado no .env
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
   });
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
