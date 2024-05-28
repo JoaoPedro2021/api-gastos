@@ -15,9 +15,10 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: `${process.env.NEXT_PUBLIC_APP_URL}`,
+    origin: process.env.NEXT_PUBLIC_APP_URL,
     methods: ['POST', 'PUT', 'DELETE', 'GET', 'PATCH'],
     credentials: true,
+    allowedHeaders: 'Content-Type,Authorization',
   });
 
   const config = new DocumentBuilder()
